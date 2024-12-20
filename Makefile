@@ -5,7 +5,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -g
 
 # Source files
-SRC = main.c
+SRC = main.c stringManip.c
 
 # Object files
 OBJ = $(SRC:.c=.o)
