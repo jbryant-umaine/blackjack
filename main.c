@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "stack.h"
 #include "stringManip.h"
@@ -17,13 +18,64 @@ void swap(Card *a, Card *b)
 void displayHand(Card *hand, int size)
 {
     Card *ptr = hand;
+    int sum = 0;
     printf("Hand: ");
+
     while (ptr < hand + size)
     {
-        printf("%s (%d) ", ptr->name, ptr->value);
+        // If it's an Ace and counting it as 11 would bust, show it as 1
+        if ((strcmp(ptr->name, "AD") == 0 ||
+             strcmp(ptr->name, "AH") == 0 ||
+             strcmp(ptr->name, "AS") == 0 ||
+             strcmp(ptr->name, "AC") == 0) &&
+            sum + 11 > 21)
+        {
+            printf("%s (1) ", ptr->name);
+            sum += 1;
+        }
+        else
+        {
+            printf("%s (%d) ", ptr->name, ptr->value);
+            sum += ptr->value;
+        }
         ptr++;
     }
     printf("\n");
+}
+
+// Calculate hand value with Ace logic
+int calculateHandValue(Card *hand, int size)
+{
+    int sum = 0;
+    int numAces = 0;
+    Card *ptr = hand;
+
+    // count aces and sum non-aces
+    while (ptr < hand + size)
+    {
+        if (strcmp(ptr->name, "AD") == 0 ||
+            strcmp(ptr->name, "AH") == 0 ||
+            strcmp(ptr->name, "AS") == 0 ||
+            strcmp(ptr->name, "AC") == 0)
+        {
+            numAces++;
+            sum += 1; // Initially count Aces as 1
+        }
+        else
+        {
+            sum += ptr->value;
+        }
+        ptr++;
+    }
+
+    // convert Aces from 1 to 11 if possible
+    while (numAces > 0 && sum + 10 <= 21)
+    {
+        sum += 10; // Convert one Ace from 1 to 11
+        numAces--;
+    }
+
+    return sum;
 }
 
 // Fisher-Yates shuffle algorithm
@@ -106,31 +158,32 @@ int main(int argc, char *argv[])
 
     // Draw two cards for dealer
     printf("\nDealer's hand:\n");
-    int dealerSum = 0;
     for (int i = 0; i < 2; i++)
     {
         Card drawnCard = stackPop(&deck);
         stackPush(&dealerHand, drawnCard);
-        dealerSum += drawnCard.value;
-
         if (i == 0)
         {
-            printf("Card 1: %s (Value: %d)\n", drawnCard.name, drawnCard.value);
+            printf("Card 1: %s\n", drawnCard.name);
             printf("Card 2: [Hidden]\n");
         }
     }
+    int dealerSum = calculateHandValue(dealerHand.stack, dealerHand.top + 1);
     printf("Dealer's visible total: %d\n", dealerHand.stack[0].value);
 
     // Draw two cards for player
     printf("\nPlayer's hand:\n");
-    int playerSum = 0;
+
     for (int i = 0; i < 2; i++)
     {
         Card drawnCard = stackPop(&deck);
         stackPush(&playerHand, drawnCard);
-        playerSum += drawnCard.value;
     }
-    displayHand(playerHand.stack, playerHand.top + 1); // Show initial hand
+
+    displayHand(playerHand.stack, playerHand.top + 1);
+
+    int playerSum = calculateHandValue(playerHand.stack, playerHand.top + 1);
+
     printf("Player's total: %d\n", playerSum);
 
     // Player's turn
@@ -141,7 +194,7 @@ int main(int argc, char *argv[])
     while (playerSum < 21 && !playerStands)
     {
         printf("\nYour current hand:\n");
-        displayHand(playerHand.stack, playerHand.top + 1); // Show current hand
+        displayHand(playerHand.stack, playerHand.top + 1);
         printf("Your total: %d\n", playerSum);
         printf("What would you like to do?\n");
         printf("1. Hit\n");
@@ -155,8 +208,8 @@ int main(int argc, char *argv[])
         case '1': // Hit
             Card drawnCard = stackPop(&deck);
             stackPush(&playerHand, drawnCard);
-            playerSum += drawnCard.value;
-            printf("Drew: %s (Value: %d)\n", drawnCard.name, drawnCard.value);
+            playerSum = calculateHandValue(playerHand.stack, playerHand.top + 1);
+            printf("Drew: %s\n", drawnCard.name);
             break;
 
         case '2': // Stand
@@ -171,26 +224,26 @@ int main(int argc, char *argv[])
 
     // Dealer's turn
     printf("\nDealer's turn:\n");
-    printf("Dealer's hidden card was: %s (Value: %d)\n", dealerHand.stack[1].name, dealerHand.stack[1].value);
+    printf("Dealer's hidden card was: %s\n", dealerHand.stack[1].name);
     printf("Dealer's current total: %d\n", dealerSum);
 
     while (dealerSum < 13)
     {
         Card drawnCard = stackPop(&deck);
         stackPush(&dealerHand, drawnCard);
-        dealerSum += drawnCard.value;
-        printf("Dealer hits: %s (Value: %d)\n", drawnCard.name, drawnCard.value);
+        dealerSum = calculateHandValue(dealerHand.stack, dealerHand.top + 1);
+        printf("Dealer hits: %s\n", drawnCard.name);
         printf("Dealer's new total: %d\n", dealerSum);
     }
 
     // Determine winner
     printf("\nFinal Results:\n");
     printf("Dealer's final hand:\n");
-    displayHand(dealerHand.stack, dealerHand.top + 1); // Show dealer's final hand
+    displayHand(dealerHand.stack, dealerHand.top + 1);
     printf("Dealer's total: %d\n\n", dealerSum);
 
     printf("Your final hand:\n");
-    displayHand(playerHand.stack, playerHand.top + 1); // Show player's final hand
+    displayHand(playerHand.stack, playerHand.top + 1);
     printf("Your total: %d\n", playerSum);
 
     if (playerSum > 21)
