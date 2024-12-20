@@ -1,3 +1,8 @@
+/**
+ * stack.h
+ *
+ * Header file for defining methods for stack.c
+ */
 #ifndef STACK_H
 #define STACK_H
 

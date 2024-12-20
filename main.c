@@ -1,3 +1,9 @@
+/**
+ * main.c
+ *
+ * This file is responsible for parsing the deck of cards and performing the main gameplay logic.
+ * It contains methods pertaining to card logic, such as displaying, shuffling, and calculating hand values.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

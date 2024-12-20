@@ -1,3 +1,10 @@
+/**
+ * stack.c
+ *
+ * This creates a stack data structure for holding Cards.
+ *
+ * A card object has a name  (i.e. 9C = 9 Club) and a value.
+ */
 #include <stdlib.h>
 #include "stack.h"
 

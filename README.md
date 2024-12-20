@@ -21,6 +21,9 @@ A command-line implementation of Blackjack in C for COS 135 final project. This 
 - Dealer must hit on anything below 13
 - Dealer must stand on 13 or higher
 
+Something that was not explicitly taught in class was the ability to create games. Additionally,
+I used valgrind to check for memory leaks. I also learned how to use "compound literals" in stack.c.
+
 ## Getting Started
 
 ### Installation
