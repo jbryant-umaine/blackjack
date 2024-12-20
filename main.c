@@ -14,7 +14,7 @@ void swap(Card *a, Card *b)
     *b = temp;
 }
 
-// Display the hand using pointer arithmetic
+// Take a hand of cards and the hand size and display it using pointer arithmetic
 void displayHand(Card *hand, int size)
 {
     Card *ptr = hand;
@@ -43,7 +43,8 @@ void displayHand(Card *hand, int size)
     printf("\n");
 }
 
-// Calculate hand value with Ace logic
+// Take the hand and the size of the hand and return the sum of the current hand
+// Used for calculating Ace of spades.
 int calculateHandValue(Card *hand, int size)
 {
     int sum = 0;
@@ -78,7 +79,7 @@ int calculateHandValue(Card *hand, int size)
     return sum;
 }
 
-// Fisher-Yates shuffle algorithm
+// Take a card array and perform the Fisher-Yates shuffle algorithm
 void shuffle(Card *array, int n)
 {
     srand(time(NULL));
@@ -90,6 +91,7 @@ void shuffle(Card *array, int n)
     }
 }
 
+// Parses cards, runs the main game, and awaits for user commands.
 int main(int argc, char *argv[])
 {
     // Check if file name was passed as argument.

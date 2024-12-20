@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "stack.h"
 
+// Initializes the stack of cards
 void stackInit(STACK *s, int size)
 {
     s->stack = (Card *)malloc(size * sizeof(Card));
@@ -8,6 +9,7 @@ void stackInit(STACK *s, int size)
     s->top = -1;
 }
 
+// Frees the stack
 void stackFree(STACK *s)
 {
     free(s->stack);
@@ -15,6 +17,7 @@ void stackFree(STACK *s)
     s->size = 0;
 }
 
+// Removes a card from the top of the stack
 Card stackPop(STACK *s)
 {
     Card emptyCard = {"", -1};
@@ -25,6 +28,7 @@ Card stackPop(STACK *s)
     return s->stack[s->top--];
 }
 
+// Pushes a card into the stack
 int stackPush(STACK *s, Card card)
 {
     if (s->top == s->size - 1)
