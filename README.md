@@ -33,3 +33,23 @@ Build binary with `make`.
 ### Running
 
 The game can be started with `./main cards.txt`
+
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+<details>
+  <summary>Don't Click</summary>
+  <img src="https://i.imgur.com/4CdqtNL.jpeg" alt="My Cat" width="500" height="667">
+</details>
